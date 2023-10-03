@@ -17,17 +17,18 @@ public class knightjump {
     public static void main(String[] args) {
         Scanner scnr = new Scanner(System.in);
         int n = scnr.nextInt();
-        String[][] board = new String[n][n];
+        char[][] board = new char[n][n];
         Queue<Pair> q = new LinkedList<>();
         HashSet<Pair> visited = new HashSet<>();
 
         //Indexes of our start
         Pair K = new Pair();
         for (int i = 0; i < n; i++) {
+            String s = scnr.next();
             for (int j = 0; j < n; j++) {
-                String s = scnr.next();
-                board[i][j] = s;
-                if (s.equals("K")) {
+                char ch = s.charAt(i);
+                board[i][j] = ch;
+                if (ch == 'K') {
                     K.x = i;
                     K.y = j;
                 }
@@ -39,19 +40,23 @@ public class knightjump {
         int[] yArr = new int[] {2, -2, 2, -2, 1, -1, 1, -1};
         int count = 0;
         q.add(new Pair(0,0));
-        while (q.size() != 0) {
+        boolean runLoop = true;
+        while (q.size() != 0 && runLoop) {
             int size = q.size();
             for (int i = 0; i < size; i++) {
                 Pair pair = q.remove();
                 if (K.x == pair.x && K.y == pair.y) {
                     System.out.println(count);
+                    runLoop = false;
+                    break;
                 }
                 for (int j = 0; j < 8; j++) {
                     int x = xArr[j] + pair.x;
                     int y = yArr[j] + pair.y;
                     Pair curr = new Pair(x, y);
-                    if (!board[x][y].equals("K") && visited.contains(curr)
-                            && (x < n && x >= 0 || y < n && y >= 0)) {
+                    if (!visited.contains(curr)
+                        && (x < n && x >= 0 && y < n && y >= 0)
+                        && board[x][y] != '#') {
                         q.add(curr);
                         visited.add(curr);
                     }
@@ -59,6 +64,6 @@ public class knightjump {
             }
             count++;
         }
-        System.out.println(-1);
+        if (runLoop) System.out.println(-1);
     }
 }
